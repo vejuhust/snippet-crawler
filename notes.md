@@ -101,6 +101,8 @@ sudo easy_install3 -U pip
 ### upload to devbox
 ```bash
 scp -r *.* root@stcaraa:~/snipcrawl/
+
+rsync -aP *.py root@ls:~/snipcrawl/
 ```
 
 
@@ -139,3 +141,12 @@ page_content["data"]["max_time"]
 page_content["data"]["data"][0]["group"]["content"]
 ```
 
+post-
+url: 1431168324
+min: 1431168024
+max: 1431156324
+
+api-
+url: 1431168324
+min: 1431168324
+max: 1431156624

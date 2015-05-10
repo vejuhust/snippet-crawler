@@ -17,7 +17,7 @@ config_queue_page   = "queue_page"
 
 config_log_file     =  "sc_{}.log".format(strftime("%Y-%m-%d"))
 
-config_crawl_process    = 4
+config_crawl_process    = min(1, cpu_count())
 config_crawl_retry      = 3
 config_crawl_sleep      = 2
 config_crawl_timeout    = 5
@@ -25,7 +25,7 @@ config_crawl_timeout    = 5
 config_idle_sleep       = 1
 
 config_assign_domain    = "http://neihanshequ.com/joke/?is_json=1&max_time="
-config_assgin_process   = max(4, cpu_count())
+config_assgin_process   = min(1, cpu_count())
 
 config_parse_domain     = "http://neihanshequ.com/p"
-config_parse_process    = max(4, cpu_count())
+config_parse_process    = min(1, cpu_count())

@@ -29,10 +29,9 @@ class Launcher():
         self.clear_queue_crawl_page_snippet()
         self.add_urls_to_queue_crawl(urls)
         times_idle = 1
-        for _ in range(2):
-            self.run_crawler(len(urls) + times_idle)
-            self.run_assigner(len(urls) + times_idle)
-            self.run_parser(len(urls) + times_idle)
+        self.run_crawler(len(urls) + times_idle)
+        self.run_assigner(len(urls) + times_idle)
+        self.run_parser(len(urls) + times_idle)
         # self.read_all_profile()
 
 

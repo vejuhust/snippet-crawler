@@ -26,29 +26,32 @@ class Parser(BaseLogger):
 
 
     def process(self):
-        result_count = None
+        count_valid = None
+        count_duplicate = None
         job = self._db_conn.queue_page_take_data()
         if job != None:
             url = job['url']
             data_list = job.get('data', [])
             self._log_info("parse json data from %s, items count %d", url, len(data_list))
-            result_count = 0
+            count_valid = 0
+            count_duplicate = 0
             for data_index, data_item in enumerate(data_list):
                 snippet = self._extract_snippet_record(data_item)
                 if snippet == None:
                     self._log_warning("fail to extract #%d record of '%s' json data in queue_page", data_index, url)
                 else:
                     if not self._db_conn.snippet_create(snippet):
-                        self._log_warning("fail to add new snippet %s", snippet["url"])
+                        count_duplicate += 1
+                        # self._log_warning("fail to add new snippet %s", snippet["url"])
                     else:
-                        result_count += 1
-            self._log_info("extract %d valid snippets from %s json data", result_count, url)
+                        count_valid += 1
+            self._log_info("extract %d valid & %d duplicate snippets from %s json data", count_valid, count_duplicate, url)
             if not self._db_conn.queue_page_done_data(url):
                 self._log_warning("fail to mark %s as 'done' in queue_crawl", url)
         else:
             self._log_warning("grab no json data to parse")
             sleep(config_idle_sleep)
-        return result_count
+        return (count_valid, count_duplicate)
 
 
     def _extract_snippet_record(self, data):
@@ -57,6 +60,7 @@ class Parser(BaseLogger):
                 "url": config_parse_domain + str(data["group"]["group_id"]),
                 "date": datetime.fromtimestamp(data["group"]["create_time"]),
                 "content": data["group"]["content"],
+                "archive": data,
             }
             if len(data["comments"]) > 0:
                 snippet["comment"] = data["comments"][0]["text"]
