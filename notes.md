@@ -1,4 +1,4 @@
-# joke crawler dev notes
+# snippet crawler dev notes
 
 ## mongodb
 
@@ -50,4 +50,16 @@ mongod --dbpath /data/mongodb --bind_ip=0.0.0.0 --auth
 login as `root` with auth:
 ```bash
 mongo --port 27017 -u root -p YOUR_PASSWORD --authenticationDatabase admin
+```
+
+### create user
+```javascript
+use snippetcrawl
+db.createUser(
+  {
+    user: "YOUR_USERNAME",
+    pwd: "YOUR_PASSWORD",
+    roles: [ { role: "dbOwner", db: "snippetcrawl" } ]
+  }
+)
 ```
