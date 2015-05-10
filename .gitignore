@@ -55,3 +55,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Personal
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+archive/
