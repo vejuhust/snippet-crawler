@@ -21,7 +21,7 @@ config_crawl_process    = min(1, cpu_count())
 config_crawl_retry      = 3
 config_crawl_sleep      = 2
 config_crawl_timeout    = 5
-config_crawl_date_min   = 5
+config_crawl_date_min   = 1431270815
 config_crawl_date_max   = 1431285365
 
 config_idle_sleep       = 1
