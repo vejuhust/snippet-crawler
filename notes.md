@@ -199,6 +199,8 @@ start: http://neihanshequ.com/joke/?is_json=1&max_time=1431168324 - 2015/5/9 下
 pause: http://neihanshequ.com/joke/?is_json=1&max_time=1428054324 - 2015/4/3 下午5:45:24
 new:   http://neihanshequ.com/joke/?is_json=1&max_time=1431266365 - 2015/5/10 下午9:54:25
 paus2: http://neihanshequ.com/joke/?is_json=1&max_time=1428051565 - 2015/4/3 下午4:59:25
+paus3: http://neihanshequ.com/bar/1/?is_json=1&max_time=1428051502 - 2015/4/3 下午4:58:22
+
 
 ```
 
