@@ -13,6 +13,7 @@ from time import sleep
 
 urls = [
     "http://neihanshequ.com/joke/?is_json=1&max_time=1431168324",
+    "http://neihanshequ.com/joke/?is_json=1&max_time=1431266365",
 ]
 
 
@@ -26,7 +27,7 @@ class Launcher():
 
 
     def process(self, urls):
-        self.clear_queue_crawl_page_snippet()
+        # self.clear_queue_crawl_page_snippet()
         self.add_urls_to_queue_crawl(urls)
         times_idle = 1
         self.run_crawler(len(urls) + times_idle)

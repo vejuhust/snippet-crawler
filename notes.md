@@ -114,6 +114,7 @@ rsync -aP *.py root@ls:~/snipcrawl/
 use snippetcrawl;
 
 db.queue_crawl.find().count();
+db.queue_crawl.find({ "status": "new" }).count();
 db.queue_crawl.find().sort( { "date": 1 } ).pretty();
 
 db.queue_page.find().count();
@@ -124,6 +125,14 @@ db.queue_page.find({}, { "text": 0, "data": 0 }).sort( { "date": 1 } ).pretty();
 db.snippet.find().count();
 db.snippet.find().sort( { "date": -1 } ).pretty();
 db.snippet.find({}, { "archive": 0 }).sort( { "date": -1 } ).pretty();
+```
+
+
+### create
+
+```javascript
+use snippetcrawl;
+
 ```
 
 
@@ -183,3 +192,11 @@ mv snipcrawl1 ~/sassign
 unzip snipcrawl1.zip
 mv snipcrawl1 ~/sparse
 ```
+
+limit:
+```
+start: http://neihanshequ.com/joke/?is_json=1&max_time=1431168324 - 2015/5/9 下午6:45:24
+pause: http://neihanshequ.com/joke/?is_json=1&max_time=1428054324 - 2015/4/3 下午5:45:24
+new:   http://neihanshequ.com/joke/?is_json=1&max_time=1431266365 - 2015/5/10 下午9:54:25
+```
+
