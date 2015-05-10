@@ -116,3 +116,21 @@ db.queue_page.find().count();
 db.queue_page.find().sort( { "date": 1 } ).pretty();
 db.queue_page.find({}, { "text": 0 }).sort( { "date": 1 } ).pretty();
 ```
+
+
+## dev
+
+### assign debug
+
+```python
+from DatabaseAccessor import DatabaseAccessor
+dal = DatabaseAccessor()
+job = dal.queue_page_renew("http://neihanshequ.com/joke/?is_json=1&max_time=1431168324")
+job = dal.queue_page_take_raw()
+from json import loads
+text = job.get('text', "")
+page_content = loads(text)
+page_content["data"]["min_time"]
+page_content["data"]["max_time"]
+page_content["data"]["data"][0]["group"]["content"]
+```

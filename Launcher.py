@@ -14,8 +14,6 @@ from time import sleep
 
 urls = [
     "http://neihanshequ.com/joke/?is_json=1&max_time=1431168324",
-    "http://neihanshequ.com/joke/?is_json=1&max_time=1431156324",
-    "http://neihanshequ.com/joke/?is_json=1&max_time=1431144324",
 ]
 
 
@@ -29,10 +27,10 @@ class Launcher():
 
 
     def process(self, urls):
-        self.clear_queue_crawl_page_snippet()
+        # self.clear_queue_crawl_page_snippet()
         self.add_urls_to_queue_crawl(urls)
         self.run_crawler(len(urls) + 3)
-        # self.run_assigner(len(urls) + 3)
+        self.run_assigner(len(urls) + 3)
         # self.run_parser_profile(len(urls) + 3)
         # self.run_parser_follow(len(urls) + 3)
         # self.read_all_profile()
@@ -58,13 +56,13 @@ class Launcher():
                 sleep(config_crawl_sleep)
 
 
-"""
     def run_assigner(self, times=5):
         with closing(Assigner()) as assigner:
             for _ in range(times):
                 assigner.process()
 
 
+"""
     def run_parser_profile(self, times=5):
         with closing(ParserProfile()) as parser:
             for _ in range(times):

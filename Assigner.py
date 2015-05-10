@@ -26,11 +26,11 @@ class Assigner(BaseLogger):
 
     def process(self):
         url = None
-        job = self._db_conn.queue_page_take()
+        job = self._db_conn.queue_page_take_raw()
         if job != None:
             url = job['url']
             text = job.get('text', "")
-            parse_result = self._parse_into_json(text)
+            parse_result = self._parse_raw_page(text)
             if parse_result == None:
                 self._log_warning("fail to parse '%s' as JSON in queue_page", url)
                 if not self._db_conn.queue_page_fail_raw(url):
@@ -39,7 +39,7 @@ class Assigner(BaseLogger):
                 if parse_result[0] == None:
                     self._log_warning("'%s' in queue_page indicates no more new content", url)
                 else:
-                    self._log_info("%s indicates new crawling job: %s", url, len(parse_result[0]))
+                    self._log_info("%s indicates new crawling job: %s", url, parse_result[0])
                     if not self._db_conn.queue_crawl_create(parse_result[0]):
                         self._log_warning("fail to add %s as 'new' job in queue_crawl", parse_result[0])
                 if parse_result[1] == None:
@@ -54,14 +54,14 @@ class Assigner(BaseLogger):
         return url
 
 
-    def _parse_raw_page(self, url, text):
+    def _parse_raw_page(self, text):
         try:
             page_content = loads(text)
             url_new, data_new = None, None
-            if page_content.data.has_more:
-                url_new = config_assign_domain + page_content.data.min_time
-            if len(page_content.data.data) > 0:
-                data_new = page_content.data.data
+            if page_content["data"]["has_more"]:
+                url_new = config_assign_domain + str(page_content["data"]["max_time"])
+            if len(page_content["data"]["data"]) > 0:
+                data_new = page_content["data"]["data"]
             result = (url_new, data_new)
         except Exception as e:
             result = None

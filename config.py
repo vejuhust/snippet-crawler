@@ -19,7 +19,7 @@ config_log_file     =  "sc_{}.log".format(strftime("%Y-%m-%d"))
 
 config_crawl_process    = 4
 config_crawl_retry      = 3
-config_crawl_sleep      = 5
+config_crawl_sleep      = 1
 config_crawl_timeout    = 5
 
 config_idle_sleep       = 1
