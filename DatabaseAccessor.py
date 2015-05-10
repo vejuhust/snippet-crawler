@@ -70,6 +70,7 @@ class DatabaseAccessor():
         return self._db[queue_name].remove(filter).get('ok', 0) == 1
 
 
+
     def queue_crawl_create(self, url):
         return self._job_create(config_queue_crawl, { 'url': url })
 
@@ -105,12 +106,45 @@ class DatabaseAccessor():
         return self._job_count(config_queue_crawl, filter)
 
 
+
     def queue_page_create(self, url, text):
         return self._job_create(config_queue_page, { 'url': url, 'text': text })
 
 
+    def queue_page_take_raw(self):
+        return self._job_update(config_queue_page, "new", "process_raw")
+
+
+    def queue_page_take_data(self):
+        return self._job_update(config_queue_page, "data", "process_data")
+
+
+    def queue_page_done_raw(self, url):
+        return None != self._job_update(config_queue_page, "process_raw", "data", url)
+
+
+    def queue_page_done_data(self, url):
+        return None != self._job_update(config_queue_page, "process_data", "done", url)
+
+
+    def queue_page_fail_raw(self, url):
+        return None != self._job_update(config_queue_page, "process_raw", "fail", url)
+
+
+    def queue_page_renew(self, url):
+        return None != self._job_update(config_queue_page, None, "new", url)
+
+
+    def queue_page_count(self, status=None):
+        filter = {}
+        if status != None:
+            filter['status'] = status
+        return self._job_count(config_queue_page, filter)
+
+
     def queue_page_clear(self):
         return self._job_delete(config_queue_page)
+
 
 
 """
@@ -141,46 +175,6 @@ class DatabaseAccessor():
         for field in fields:
             filter[field] = { '$exists': True }
         return self._job_count(config_db_snippet, filter)
-
-
-    def queue_page_take(self):
-        return self._job_update(config_queue_page, "new", "process")
-
-
-    def queue_page_take_snippet(self):
-        return self._job_update(config_queue_page, "snippet", "parse")
-
-
-    def queue_page_take_follow(self):
-        return self._job_update(config_queue_page, "follow", "parse")
-
-
-    def queue_page_done(self, url, flag):
-        return None != self._job_update(config_queue_page, "process", flag, url)
-
-
-    def queue_page_done_snippet(self, url):
-        return None != self._job_update(config_queue_page, "parse", "done_snippet", url)
-
-
-    def queue_page_done_follow(self, url):
-        return None != self._job_update(config_queue_page, "parse", "done_follow", url)
-
-
-    def queue_page_fail(self, url):
-        return None != self._job_update(config_queue_page, "process", "fail", url)
-
-
-    def queue_page_renew(self, url):
-        return None != self._job_update(config_queue_page, None, "new", url)
-
-
-    def queue_page_count(self, status=None):
-        filter = {}
-        if status != None:
-            filter['status'] = status
-        return self._job_count(config_queue_page, filter)
-
 """
 
 def main():
