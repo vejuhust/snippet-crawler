@@ -8,6 +8,7 @@ from contextlib import closing
 from json import loads
 from multiprocessing import Process
 from platform import node
+from re import sub
 from time import sleep
 
 
@@ -59,7 +60,8 @@ class Assigner(BaseLogger):
             page_content = loads(text)
             url_new, data_new = None, None
             if page_content["data"]["has_more"]:
-                url_new = config_assign_domain + str(page_content["data"]["max_time"])
+                url_new = sub(r"=(\d*)$", r"=" + str(page_content["data"]["max_time"]), url)
+                # url_new = config_assign_domain + str(page_content["data"]["max_time"])
             if len(page_content["data"]["data"]) > 0:
                 data_new = page_content["data"]["data"]
             result = (url_new, data_new)

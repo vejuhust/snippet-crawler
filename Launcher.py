@@ -12,7 +12,7 @@ from time import sleep
 
 
 urls = [
-    "http://neihanshequ.com/joke/?is_json=1&max_time=1431168324",
+    "http://neihanshequ.com/bar/1/?is_json=1&max_time=1431278602",
     "http://neihanshequ.com/joke/?is_json=1&max_time=1431266365",
 ]
 
