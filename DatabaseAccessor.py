@@ -45,11 +45,6 @@ class DatabaseAccessor():
             upsert=True)
 
 
-    def queue_crawl_create(self, url):
-        return self._job_create(config_queue_crawl, { 'url': url })
-
-
-"""
     def _job_count(self, queue_name, filter={}):
         return self._db[queue_name].find(filter).count()
 
@@ -75,33 +70,8 @@ class DatabaseAccessor():
         return self._db[queue_name].remove(filter).get('ok', 0) == 1
 
 
-    def snippet_create(self, snippet):
-        return self._job_create(config_db_snippet, snippet)
-
-
-    def snippet_clear(self):
-        return self._job_delete(config_db_snippet)
-
-
-    def snippet_read(self, *fields):
-        filter = {}
-        for field in fields:
-            filter[field] = { '$exists': True }
-        data_raw = self._job_read(config_db_snippet, filter)
-        fields_remove = ['_id', 'date', 'status']
-        data = []
-        for item in data_raw:
-            for field in fields_remove:
-                item.pop(field, None)
-            data.append(item)
-        return data
-
-
-    def snippet_count(self, *fields):
-        filter = {}
-        for field in fields:
-            filter[field] = { '$exists': True }
-        return self._job_count(config_db_snippet, filter)
+    def queue_crawl_create(self, url):
+        return self._job_create(config_queue_crawl, { 'url': url })
 
 
     def queue_crawl_take(self):
@@ -133,6 +103,36 @@ class DatabaseAccessor():
         if status != None:
             filter['status'] = status
         return self._job_count(config_queue_crawl, filter)
+
+
+"""
+    def snippet_create(self, snippet):
+        return self._job_create(config_db_snippet, snippet)
+
+
+    def snippet_clear(self):
+        return self._job_delete(config_db_snippet)
+
+
+    def snippet_read(self, *fields):
+        filter = {}
+        for field in fields:
+            filter[field] = { '$exists': True }
+        data_raw = self._job_read(config_db_snippet, filter)
+        fields_remove = ['_id', 'date', 'status']
+        data = []
+        for item in data_raw:
+            for field in fields_remove:
+                item.pop(field, None)
+            data.append(item)
+        return data
+
+
+    def snippet_count(self, *fields):
+        filter = {}
+        for field in fields:
+            filter[field] = { '$exists': True }
+        return self._job_count(config_db_snippet, filter)
 
 
     def queue_page_create(self, url, text):

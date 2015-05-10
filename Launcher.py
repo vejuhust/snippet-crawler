@@ -29,7 +29,7 @@ class Launcher():
 
 
     def process(self, urls):
-        # self.clear_queue_crawl_page_profile()
+        self.clear_queue_crawl_page_snippet()
         self.add_urls_to_queue_crawl(urls)
         # self.run_crawler(len(urls) + 3)
         # self.run_assigner(len(urls) + 3)
@@ -43,14 +43,15 @@ class Launcher():
             for url in urls:
                 print("add {} - {}".format(url, dal.queue_crawl_create(url)))
 
-"""
-    def clear_queue_crawl_page_profile(self):
+
+    def clear_queue_crawl_page_snippet(self):
         with closing(DatabaseAccessor()) as dal:
             print("clear crawl - {}".format(dal.queue_crawl_clear()))
-            print("clear page - {}".format(dal.queue_page_clear()))
-            print("clear profile - {}".format(dal.profile_clear()))
+            # print("clear page - {}".format(dal.queue_page_clear()))
+            # print("clear snippet - {}".format(dal.snippet_clear()))
 
 
+"""
     def run_crawler(self, times=5):
         with closing(Crawler()) as crawler:
             for _ in range(times):
