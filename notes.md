@@ -111,6 +111,8 @@ rsync -aP *.py root@ls:~/snipcrawl/
 ### read
 
 ```javascript
+use snippetcrawl;
+
 db.queue_crawl.find().count();
 db.queue_crawl.find().sort( { "date": 1 } ).pretty();
 
@@ -153,3 +155,31 @@ min: 1431168324
 max: 1431156624
 
 http://neihanshequ.com/p3659746976
+
+
+## deploy
+
+upload to pi03:
+```cmd
+cd D:\UserWei\Desktop\
+scp snipcrawl1.zip root@szgeek-pi03:~/
+```
+
+dist to linux vm:
+```bash
+scp snipcrawl1.zip root@stcaraa:/tmp/
+scp snipcrawl1.zip root@stcaloc:/tmp/
+scp snipcrawl1.zip root@szgeek:/tmp/
+```
+
+up and run:
+```bash
+cd /tmp/
+
+unzip snipcrawl1.zip
+mv snipcrawl1 ~/scrawl
+unzip snipcrawl1.zip
+mv snipcrawl1 ~/sassign
+unzip snipcrawl1.zip
+mv snipcrawl1 ~/sparse
+```

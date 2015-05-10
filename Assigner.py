@@ -3,7 +3,7 @@
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
-from config import config_assign_domain, config_assgin_process, config_idle_sleep
+from config import config_assign_domain, config_assign_process, config_idle_sleep
 from contextlib import closing
 from json import loads
 from multiprocessing import Process
@@ -85,5 +85,5 @@ def main(times=10):
 
 
 if __name__ == '__main__':
-    for _ in range(config_parse_process):
+    for _ in range(config_assign_process):
         Process(target=main, args=(0,)).start()
