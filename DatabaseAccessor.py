@@ -109,6 +109,10 @@ class DatabaseAccessor():
         return self._job_create(config_queue_page, { 'url': url, 'text': text })
 
 
+    def queue_page_clear(self):
+        return self._job_delete(config_queue_page)
+
+
 """
     def snippet_create(self, snippet):
         return self._job_create(config_db_snippet, snippet)
@@ -169,10 +173,6 @@ class DatabaseAccessor():
 
     def queue_page_renew(self, url):
         return None != self._job_update(config_queue_page, None, "new", url)
-
-
-    def queue_page_clear(self):
-        return self._job_delete(config_queue_page)
 
 
     def queue_page_count(self, status=None):

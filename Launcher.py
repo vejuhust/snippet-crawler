@@ -47,7 +47,7 @@ class Launcher():
     def clear_queue_crawl_page_snippet(self):
         with closing(DatabaseAccessor()) as dal:
             print("clear crawl - {}".format(dal.queue_crawl_clear()))
-            # print("clear page - {}".format(dal.queue_page_clear()))
+            print("clear page - {}".format(dal.queue_page_clear()))
             # print("clear snippet - {}".format(dal.snippet_clear()))
 
 
