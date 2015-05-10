@@ -63,3 +63,20 @@ db.createUser(
   }
 )
 ```
+
+
+## python
+
+### setup devenv for python3
+
+```bash
+sudo apt-get install python3-pip python3-dev python3-setuptools
+```
+
+### install via pip
+```bash
+sudo pip3 install pymongo
+sudo pip3 install requests
+sudo pip3 install beautifulsoup4
+```
+
