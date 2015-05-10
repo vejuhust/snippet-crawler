@@ -36,7 +36,7 @@ class Parser(BaseLogger):
             count_valid = 0
             count_duplicate = 0
             for data_index, data_item in enumerate(data_list):
-                snippet = self._extract_snippet_record(data_item)
+                snippet = self._extract_snippet_record(url, data_item)
                 if snippet == None:
                     self._log_warning("fail to extract #%d record of '%s' json data in queue_page", data_index, url)
                 else:
@@ -54,13 +54,15 @@ class Parser(BaseLogger):
         return (count_valid, count_duplicate)
 
 
-    def _extract_snippet_record(self, data):
+    def _extract_snippet_record(self, url, data):
         try:
             snippet = {
                 "url": config_parse_domain + str(data["group"]["group_id"]),
                 "date": datetime.fromtimestamp(data["group"]["create_time"]),
                 "content": data["group"]["content"],
                 "archive": data,
+                "source": url.split("?")[0],
+                "source_name": data["group"]["category_name"],
             }
             snippet["count"] = {
                 "digg": data["group"]["digg_count"],
