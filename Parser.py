@@ -63,7 +63,9 @@ class Parser(BaseLogger):
                 "archive": data,
             }
             if len(data["comments"]) > 0:
-                snippet["comment"] = data["comments"][0]["text"]
+                snippet["comments"] = []
+                for comment in data["comments"]:
+                    snippet["comments"].append(comment["text"])
         except Exception as e:
             snippet = None
         return snippet;

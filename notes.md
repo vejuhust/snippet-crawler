@@ -120,7 +120,8 @@ db.queue_page.find({}, { "text": 0 }).sort( { "date": 1 } ).pretty();
 db.queue_page.find({}, { "text": 0, "data": 0 }).sort( { "date": 1 } ).pretty();
 
 db.snippet.find().count();
-db.snippet.find().sort( { "date": 1 } ).pretty();
+db.snippet.find().sort( { "date": -1 } ).pretty();
+db.snippet.find({}, { "archive": 0 }).sort( { "date": -1 } ).pretty();
 ```
 
 
