@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Database Accessor for snippet crawler"""
+"""Database accessors for snippet crawler"""
 
 from config import *
 from contextlib import closing
@@ -105,6 +105,10 @@ class DatabaseAccessor():
         return self._job_count(config_queue_crawl, filter)
 
 
+    def queue_page_create(self, url, text):
+        return self._job_create(config_queue_page, { 'url': url, 'text': text })
+
+
 """
     def snippet_create(self, snippet):
         return self._job_create(config_db_snippet, snippet)
@@ -133,10 +137,6 @@ class DatabaseAccessor():
         for field in fields:
             filter[field] = { '$exists': True }
         return self._job_count(config_db_snippet, filter)
-
-
-    def queue_page_create(self, url, text):
-        return self._job_create(config_queue_page, { 'url': url, 'text': text })
 
 
     def queue_page_take(self):
