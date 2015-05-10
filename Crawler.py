@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Web crawler for github profile crawler"""
+"""JSON API crawler for snippet crawler"""
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
