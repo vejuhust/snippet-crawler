@@ -53,6 +53,8 @@ mongo --port 27017 -u root -p YOUR_PASSWORD --authenticationDatabase admin
 ```
 
 ### create user
+
+create after logged in as admin
 ```javascript
 use snippetcrawl
 db.createUser(
@@ -62,6 +64,11 @@ db.createUser(
     roles: [ { role: "dbOwner", db: "snippetcrawl" } ]
   }
 )
+```
+
+login as `YOUR_USERNAME` with auth:
+```bash
+mongo --port 27017 -u YOUR_USERNAME -p YOUR_PASSWORD --authenticationDatabase snippetcrawl
 ```
 
 
@@ -81,8 +88,17 @@ sudo pip3 install beautifulsoup4
 sudo pip3 install flask
 ```
 
+### install by requirements.txt 
+```bash
+pip3 install -r requirements.txt
+```
+
 ### fix `ImportError: cannot import name 'IncompleteRead'` 
 ```bash
 sudo easy_install3 -U pip
 ```
 
+### upload to devbox
+```bash
+scp -r *.* root@stcaraa:~/snipcrawl/
+```

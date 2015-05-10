@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Database Accessor for github profile crawler"""
+"""Database Accessor for snippet crawler"""
 
 from config import *
 from contextlib import closing
@@ -17,17 +17,21 @@ class DatabaseAccessor():
         self._validate_collections()
 
 
+    def close(self):
+        self._client.close()
+
+
     def _validate_collections(self):
         names = self._db.collection_names()
-        collections = [config_db_profile, config_queue_crawl, config_queue_page]
+        collections = [config_db_snippet, config_queue_crawl, config_queue_page]
         for collection in collections:
             if collection not in names:
                 try:
                     self._db.create_collection(collection)
-                    self._db[collection].create_index([('date', ASCENDING)], background=True)
                     self._db[collection].create_index([('url', ASCENDING)], background=True)
                     self._db[collection].create_index([('status', ASCENDING)], background=True)
                     self._db[collection].create_index([('url', ASCENDING), ('status', ASCENDING)], background=True)
+                    self._db[collection].create_index([('date', ASCENDING)], background=True)
                 except Exception as e:
                     pass
 
@@ -66,35 +70,6 @@ class DatabaseAccessor():
         return self._db[queue_name].remove(filter).get('ok', 0) == 1
 
 
-    def profile_create(self, profile):
-        return self._job_create(config_db_profile, profile)
-
-
-    def profile_clear(self):
-        return self._job_delete(config_db_profile)
-
-
-    def profile_read(self, *fields):
-        filter = {}
-        for field in fields:
-            filter[field] = { '$exists': True }
-        data_raw = self._job_read(config_db_profile, filter)
-        fields_remove = ['_id', 'date', 'status']
-        data = []
-        for item in data_raw:
-            for field in fields_remove:
-                item.pop(field, None)
-            data.append(item)
-        return data
-
-
-    def profile_count(self, *fields):
-        filter = {}
-        for field in fields:
-            filter[field] = { '$exists': True }
-        return self._job_count(config_db_profile, filter)
-
-
     def queue_crawl_create(self, url):
         return self._job_create(config_queue_crawl, { 'url': url })
 
@@ -130,6 +105,36 @@ class DatabaseAccessor():
         return self._job_count(config_queue_crawl, filter)
 
 
+"""
+    def snippet_create(self, snippet):
+        return self._job_create(config_db_snippet, snippet)
+
+
+    def snippet_clear(self):
+        return self._job_delete(config_db_snippet)
+
+
+    def snippet_read(self, *fields):
+        filter = {}
+        for field in fields:
+            filter[field] = { '$exists': True }
+        data_raw = self._job_read(config_db_snippet, filter)
+        fields_remove = ['_id', 'date', 'status']
+        data = []
+        for item in data_raw:
+            for field in fields_remove:
+                item.pop(field, None)
+            data.append(item)
+        return data
+
+
+    def snippet_count(self, *fields):
+        filter = {}
+        for field in fields:
+            filter[field] = { '$exists': True }
+        return self._job_count(config_db_snippet, filter)
+
+
     def queue_page_create(self, url, text):
         return self._job_create(config_queue_page, { 'url': url, 'text': text })
 
@@ -138,8 +143,8 @@ class DatabaseAccessor():
         return self._job_update(config_queue_page, "new", "process")
 
 
-    def queue_page_take_profile(self):
-        return self._job_update(config_queue_page, "profile", "parse")
+    def queue_page_take_snippet(self):
+        return self._job_update(config_queue_page, "snippet", "parse")
 
 
     def queue_page_take_follow(self):
@@ -150,8 +155,8 @@ class DatabaseAccessor():
         return None != self._job_update(config_queue_page, "process", flag, url)
 
 
-    def queue_page_done_profile(self, url):
-        return None != self._job_update(config_queue_page, "parse", "done_profile", url)
+    def queue_page_done_snippet(self, url):
+        return None != self._job_update(config_queue_page, "parse", "done_snippet", url)
 
 
     def queue_page_done_follow(self, url):
@@ -176,10 +181,7 @@ class DatabaseAccessor():
             filter['status'] = status
         return self._job_count(config_queue_page, filter)
 
-
-    def close(self):
-        self._client.close()
-
+"""
 
 def main():
     pass
