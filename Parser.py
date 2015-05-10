@@ -6,10 +6,10 @@ from DatabaseAccessor import DatabaseAccessor
 from bs4 import BeautifulSoup
 from config import config_queue_page, config_idle_sleep, config_parse_domain, config_parse_process
 from contextlib import closing
+from datetime import datetime
 from multiprocessing import Process
 from platform import node
 from time import sleep
-from datetime import datetime
 
 
 class Parser(BaseLogger):
