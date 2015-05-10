@@ -1,115 +1,72 @@
 #!/usr/bin/env python3
-"""Profile page parser for github profile crawler"""
+"""JSON data parser for snippet crawler"""
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
 from bs4 import BeautifulSoup
 from config import config_queue_page, config_idle_sleep, config_parse_domain, config_parse_process
 from contextlib import closing
+from datetime import datetime
 from multiprocessing import Process
 from platform import node
 from time import sleep
 
 
-class ParserProfile(BaseLogger):
+class Parser(BaseLogger):
     def __init__(self, log_level=None):
         BaseLogger.__init__(self, self.__class__.__name__, log_level)
         self._db_conn = DatabaseAccessor()
-        self._log_info("profile parser start @%s", node())
-
-
-    def process(self):
-        status_profile, status_like = False, False
-        job = self._db_conn.queue_page_take_profile()
-        if job != None:
-            url = job['url']
-            text = job.get('text', "")
-            profile, like = self._parse_profile_and_like(url, text)
-            self._log_info("parse profile page: %s, items count: { profile: %d, like: %d }", url, len(profile), len(like))
-            if profile:
-                if not self._db_conn.profile_create(profile):
-                    self._log_warning("fail to add profile of %s in database", url)
-                if not self._db_conn.queue_page_done_profile(url):
-                    self._log_warning("fail to mark %s as 'done_profile' in queue_page", url)
-                status_profile = True
-            if like:
-                for key in like:
-                    if not self._db_conn.queue_crawl_create(like[key]):
-                        self._log_warning("fail to add %s as 'new' job in queue_crawl", like[key])
-                status_like = True
-        else:
-            self._log_warning("grab no profile pages to parse")
-            sleep(config_idle_sleep)
-        return status_profile, status_like
-
-
-    def _parse_profile_and_like(self, url, text):
-        profile = {}
-        like = {}
-        soup = BeautifulSoup(text)
-        profile["url"] = url
-        profile["login"] = self._parse_tag_text_by_itemprop(soup, "additionalName")
-        profile["name"] = self._parse_tag_text_by_itemprop(soup, "name")
-        profile["company"] = self._parse_tag_text_by_itemprop(soup, "worksFor")
-        profile["location"] = self._parse_tag_text_by_itemprop(soup, "homeLocation")
-        profile["blog"] = self._parse_tag_text_by_itemprop(soup, "url")
-        profile["email"] = self._parse_tag_string_by_class(soup, "email")
-        profile["join_at"] = self._parse_tag_datetime_by_class(soup, "join-date")
-        profile["follower"], like["follower"] = self._parse_tag_count_and_link(soup, "Follower")
-        profile["following"], like["following"] = self._parse_tag_count_and_link(soup, "Following")
-        profile["starred"], _ = self._parse_tag_count_and_link(soup, "Starred")
-        return self._purge_data_dict(profile), self._purge_data_dict(like, config_parse_domain)
-
-
-    def _purge_data_dict(self, data, prefix = None):
-        purged = {}
-        for key in data:
-            if data[key] != None and len(data[key].strip()) > 0:
-                if prefix == None:
-                    purged[key] = data[key].strip()
-                else:
-                    purged[key] = prefix + data[key].strip()
-        return purged
-
-
-    def _parse_tag_text_by_itemprop(self, soup, item_name):
-        tags = soup.find_all(itemprop=item_name)
-        if len(tags) > 0:
-            return tags[0].text
-
-
-    def _parse_tag_string_by_class(self, soup, class_name):
-        tags = soup.find_all(class_=class_name)
-        if len(tags) > 0:
-            return tags[0].string
-
-
-    def _parse_tag_datetime_by_class(self, soup, class_name):
-        tags = soup.find_all(class_=class_name)
-        if len(tags) > 0:
-            return tags[0].get('datetime')
-
-
-    def _parse_tag_count_and_link(self, soup, text):
-        tags = soup.find_all(class_="vcard-stat")
-        count = None
-        link = None
-        for tag in tags:
-            if text in tag.find(class_="text-muted").text:
-                count = tag.find(class_="vcard-stat-count").text
-                link = tag.get('href')
-                break
-        return count, link
+        self._log_info("parser start @%s", node())
 
 
     def close(self):
         self._db_conn.close()
-        self._log_info("profile parser exit")
+        self._log_info("parser exit")
         self._close_logger()
 
 
+    def process(self):
+        result_count = None
+        job = self._db_conn.queue_page_take_data()
+        if job != None:
+            url = job['url']
+            data_list = job.get('data', [])
+            self._log_info("parse json data from %s, items count %d", url, len(data_list))
+            result_count = 0
+            for data_index, data_item in enumerate(data_list):
+                snippet = self._extract_snippet_record(data_item)
+                if snippet == None:
+                    self._log_warning("fail to extract #%d record of '%s' json data in queue_page", data_index, url)
+                else:
+                    if not self._db_conn.snippet_create(snippet):
+                        self._log_warning("fail to add new snippet %s", snippet["url"])
+                    else:
+                        result_count += 1
+            self._log_info("extract %d valid snippets from %s json data", result_count, url)
+            if not self._db_conn.queue_page_done_data(url):
+                self._log_warning("fail to mark %s as 'done' in queue_crawl", url)
+        else:
+            self._log_warning("grab no json data to parse")
+            sleep(config_idle_sleep)
+        return result_count
+
+
+    def _extract_snippet_record(self, data):
+        try:
+            snippet = {
+                "url": config_parse_domain + str(data["group"]["group_id"]),
+                "date": datetime.fromtimestamp(data["group"]["create_time"]),
+                "content": data["group"]["content"],
+            }
+            if len(data["comments"]) > 0:
+                snippet["comment"] = data["comments"][0]["text"]
+        except Exception as e:
+            snippet = None
+        return snippet;
+
+
 def main(times=10):
-    with closing(ParserProfile()) as parser:
+    with closing(Parser()) as parser:
         if times:
             for _ in range(times):
                 parser.process()

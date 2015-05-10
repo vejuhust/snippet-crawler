@@ -150,7 +150,6 @@ class DatabaseAccessor():
 
 
 
-"""
     def snippet_create(self, snippet):
         return self._job_create(config_db_snippet, snippet)
 
@@ -178,7 +177,7 @@ class DatabaseAccessor():
         for field in fields:
             filter[field] = { '$exists': True }
         return self._job_count(config_db_snippet, filter)
-"""
+
 
 def main():
     pass
