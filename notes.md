@@ -115,6 +115,7 @@ db.queue_crawl.find().sort( { "date": 1 } ).pretty();
 db.queue_page.find().count();
 db.queue_page.find().sort( { "date": 1 } ).pretty();
 db.queue_page.find({}, { "text": 0 }).sort( { "date": 1 } ).pretty();
+db.queue_page.find({}, { "text": 0, "data": 0 }).sort( { "date": 1 } ).pretty();
 ```
 
 
@@ -134,3 +135,4 @@ page_content["data"]["min_time"]
 page_content["data"]["max_time"]
 page_content["data"]["data"][0]["group"]["content"]
 ```
+
