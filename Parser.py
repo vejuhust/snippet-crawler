@@ -62,16 +62,20 @@ class Parser(BaseLogger):
                 "content": data["group"]["content"],
                 "archive": data,
             }
-            if len(data["comments"]) > 0:
-                snippet["comments"] = []
-                for comment in data["comments"]:
-                    snippet["comments"].append(comment["text"])
             snippet["count"] = {
                 "digg": data["group"]["digg_count"],
                 "bury": data["group"]["bury_count"],
                 "favorite": data["group"]["favorite_count"],
                 "comment": data["group"]["comment_count"],
             }
+            if len(data["comments"]) > 0:
+                comment_text = []
+                comment_digg = []
+                for comment in data["comments"]:
+                    comment_text.append(comment["text"])
+                    comment_digg.append(comment["digg_count"])
+                snippet["comments"] = comment_text
+                snippet["count"]["commdigg"] = comment_digg
         except Exception as e:
             snippet = None
         return snippet;
