@@ -102,3 +102,17 @@ sudo easy_install3 -U pip
 ```bash
 scp -r *.* root@stcaraa:~/snipcrawl/
 ```
+
+
+## dba
+
+### read
+
+```javascript
+db.queue_crawl.find().count();
+db.queue_crawl.find().sort( { "date": 1 } ).pretty();
+
+db.queue_page.find().count();
+db.queue_page.find().sort( { "date": 1 } ).pretty();
+db.queue_page.find({}, { "text": 0 }).sort( { "date": 1 } ).pretty();
+```
