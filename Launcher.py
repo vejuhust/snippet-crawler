@@ -54,6 +54,7 @@ class Launcher():
 
 
     def add_urls_to_queue_crawl(self, urls):
+        print("add_urls_to_queue_crawl with config_crawl_date_max =", config_crawl_date_max)
         with closing(DatabaseAccessor()) as dal:
             for url_prefix in urls:
                 url = url_prefix + str(config_crawl_date_max)
@@ -61,6 +62,7 @@ class Launcher():
 
 
     def clear_queue_crawl_page_snippet(self):
+        print("clear_queue_crawl_page_snippet")
         with closing(DatabaseAccessor()) as dal:
             print("clear crawl - {}".format(dal.queue_crawl_clear()))
             print("clear page - {}".format(dal.queue_page_clear()))
