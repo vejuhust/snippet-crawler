@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Assign parsing page jobs in queue_page for github profile crawler"""
+"""Parsing raw pages into JSON data for snippet crawler"""
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
-from bs4 import BeautifulSoup
-from config import config_parse_process, config_idle_sleep
+from config import config_assign_domain, config_assgin_process, config_idle_sleep
 from contextlib import closing
+from json import loads
 from multiprocessing import Process
 from platform import node
 from time import sleep
@@ -18,41 +18,54 @@ class Assigner(BaseLogger):
         self._log_info("assigner start @%s", node())
 
 
-    def process(self):
-        url = None
-        flag = None
-        job = self._db_conn.queue_page_take()
-        if job != None:
-            url = job['url']
-            text = job.get('text', "")
-            flag = self._classify(url, text)
-            self._log_info("%s is classified as '%s'", url, flag)
-            if not self._db_conn.queue_page_done(url, flag):
-                self._log_warning("fail to mark %s as '%s' in queue_page", url, flag)
-        else:
-            self._log_warning("grab no jobs to assign")
-            sleep(config_idle_sleep)
-        return url, flag
-
-
-    def _classify(self, url, text):
-        soup = BeautifulSoup(text)
-        flag = "unknown"
-        if soup.find_all(class_="vcard-names"):
-            flag ="profile"
-        elif soup.find_all(class_="follow-list"):
-            flag = "follow"
-        elif soup.find_all(class_="blankslate"):
-            flag = "alone"
-        elif soup.find_all(class_="org-name"):
-            flag = "org"
-        return flag
-
-
     def close(self):
         self._db_conn.close()
         self._log_info("assigner exit")
         self._close_logger()
+
+
+    def process(self):
+        url = None
+        job = self._db_conn.queue_page_take_raw()
+        if job != None:
+            url = job['url']
+            text = job.get('text', "")
+            parse_result = self._parse_raw_page(text)
+            if parse_result == None:
+                self._log_warning("fail to parse '%s' as JSON in queue_page", url)
+                if not self._db_conn.queue_page_fail_raw(url):
+                    self._log_warning("fail to mark %s as 'fail' in queue_page", url)
+            else:
+                if parse_result[0] == None:
+                    self._log_warning("'%s' in queue_page indicates no more new content", url)
+                else:
+                    self._log_info("%s indicates new crawling job: %s", url, parse_result[0])
+                    if not self._db_conn.queue_crawl_create(parse_result[0]):
+                        self._log_warning("fail to add %s as 'new' job in queue_crawl", parse_result[0])
+                if parse_result[1] == None:
+                    self._log_warning("'%s' in queue_page contains on content", url)
+                else:
+                    self._log_info("%s contains %d raw snippets", url, len(parse_result[1]))
+                    if not self._db_conn.queue_page_done_raw(url, parse_result[1]):
+                        self._log_warning("fail to append parsed data for %s in queue_crawl", url)
+        else:
+            self._log_warning("grab no jobs to assign")
+            sleep(config_idle_sleep)
+        return url
+
+
+    def _parse_raw_page(self, text):
+        try:
+            page_content = loads(text)
+            url_new, data_new = None, None
+            if page_content["data"]["has_more"]:
+                url_new = config_assign_domain + str(page_content["data"]["max_time"])
+            if len(page_content["data"]["data"]) > 0:
+                data_new = page_content["data"]["data"]
+            result = (url_new, data_new)
+        except Exception as e:
+            result = None
+        return result
 
 
 def main(times=10):
