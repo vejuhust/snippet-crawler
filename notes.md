@@ -81,8 +81,17 @@ sudo pip3 install beautifulsoup4
 sudo pip3 install flask
 ```
 
+### install by requirements.txt 
+```bash
+pip3 install -r requirements.txt
+```
+
 ### fix `ImportError: cannot import name 'IncompleteRead'` 
 ```bash
 sudo easy_install3 -U pip
 ```
 
+### upload to devbox
+```bash
+scp -r *.* root@stcaraa:~/snipcrawl/
+```
