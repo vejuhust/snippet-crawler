@@ -66,6 +66,12 @@ class Parser(BaseLogger):
                 snippet["comments"] = []
                 for comment in data["comments"]:
                     snippet["comments"].append(comment["text"])
+            snippet["count"] = {
+                "digg": data["group"]["digg_count"],
+                "bury": data["group"]["bury_count"],
+                "favorite": data["group"]["favorite_count"],
+                "comment": data["group"]["comment_count"],
+            }
         except Exception as e:
             snippet = None
         return snippet;
