@@ -76,9 +76,11 @@ class Parser(BaseLogger):
                     comment_digg.append(comment["digg_count"])
                 snippet["comments"] = comment_text
                 snippet["count"]["commdigg"] = comment_digg
+            if len(snippet["content"].strip()) == 0:
+                snippet = None
         except Exception as e:
             snippet = None
-        return snippet;
+        return snippet
 
 
 def main(times=10):
