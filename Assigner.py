@@ -30,7 +30,7 @@ class Assigner(BaseLogger):
         if job != None:
             url = job['url']
             text = job.get('text', "")
-            parse_result = self._parse_raw_page(text)
+            parse_result = self._parse_raw_page(url, text)
             if parse_result == None:
                 self._log_warning("fail to parse '%s' as JSON in queue_page", url)
                 if not self._db_conn.queue_page_fail_raw(url):
@@ -54,7 +54,7 @@ class Assigner(BaseLogger):
         return url
 
 
-    def _parse_raw_page(self, text):
+    def _parse_raw_page(self, url, text):
         try:
             page_content = loads(text)
             url_new, data_new = None, None
@@ -63,6 +63,12 @@ class Assigner(BaseLogger):
             if len(page_content["data"]["data"]) > 0:
                 data_new = page_content["data"]["data"]
             result = (url_new, data_new)
+            self._log_info(
+                "%s data status - more: %s, min: %d, max: %d",
+                url,
+                page_content["data"]["has_more"],
+                page_content["data"]["min_time"],
+                page_content["data"]["max_time"])
         except Exception as e:
             result = None
         return result
