@@ -3,7 +3,7 @@
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
-from config import config_assign_process, config_idle_sleep
+from config import config_crawl_date_min, config_assign_process, config_idle_sleep
 from contextlib import closing
 from json import loads
 from multiprocessing import Process
@@ -59,7 +59,7 @@ class Assigner(BaseLogger):
         try:
             page_content = loads(text)
             url_new, data_new = None, None
-            if page_content["data"]["has_more"]:
+            if (page_content["data"]["has_more"]) and (page_content["data"]["max_time"] > config_crawl_date_min):
                 url_new = sub(r"=(\d*)$", r"=" + str(page_content["data"]["max_time"]), url)
             if len(page_content["data"]["data"]) > 0:
                 data_new = page_content["data"]["data"]
