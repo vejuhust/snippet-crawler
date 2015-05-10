@@ -12,23 +12,25 @@ from time import sleep
 
 
 urls = [
-    "http://neihanshequ.com/bar/69/?is_json=1&max_time=1431273778",
-    "http://neihanshequ.com/bar/60/?is_json=1&max_time=1431279966",
-    "http://neihanshequ.com/bar/82/?is_json=1&max_time=1431275772",
-    "http://neihanshequ.com/bar/53/?is_json=1&max_time=1431275655",
-    "http://neihanshequ.com/bar/49/?is_json=1&max_time=1431275615",
-    "http://neihanshequ.com/bar/26/?is_json=1&max_time=1431275595",
-    "http://neihanshequ.com/bar/25/?is_json=1&max_time=1431275526",
-    "http://neihanshequ.com/bar/5/?is_json=1&max_time=1431275455",
-    "http://neihanshequ.com/bar/46/?is_json=1&max_time=1431275383",
-    "http://neihanshequ.com/bar/51/?is_json=1&max_time=1431275326",
-    "http://neihanshequ.com/bar/59/?is_json=1&max_time=1431275226",
-    "http://neihanshequ.com/bar/11/?is_json=1&max_time=1431274986",
-    "http://neihanshequ.com/bar/3/?is_json=1&max_time=1431274855",
-    "http://neihanshequ.com/bar/76/?is_json=1&max_time=1431274583",
-    "http://neihanshequ.com/bar/80/?is_json=1&max_time=1431273759",
-    "http://neihanshequ.com/bar/1/?is_json=1&max_time=1431278602",
-    "http://neihanshequ.com/joke/?is_json=1&max_time=1431266365",
+    "http://neihanshequ.com/joke/?is_json=1&max_time=1431266365",       # 首页
+
+    "http://neihanshequ.com/bar/1/?is_json=1&max_time=1431278602",      # 内涵段子
+    "http://neihanshequ.com/bar/11/?is_json=1&max_time=1431274986",     # 精辟语录
+    "http://neihanshequ.com/bar/76/?is_json=1&max_time=1431274583",     # 友问友答
+    "http://neihanshequ.com/bar/80/?is_json=1&max_time=1431273759",     # 来自世界的恶意
+    "http://neihanshequ.com/bar/82/?is_json=1&max_time=1431275772",     # 机智如我
+    "http://neihanshequ.com/bar/59/?is_json=1&max_time=1431275226",     # 突然觉得哪里不对
+    "http://neihanshequ.com/bar/5/?is_json=1&max_time=1431275455",      # 我的xx是极品
+
+    "http://neihanshequ.com/bar/25/?is_json=1&max_time=1431275526",     # 治愈系英文
+    "http://neihanshequ.com/bar/26/?is_json=1&max_time=1431275595",     # 精选书摘
+    "http://neihanshequ.com/bar/3/?is_json=1&max_time=1431274855",      # 早晚必读的话
+    "http://neihanshequ.com/bar/53/?is_json=1&max_time=1431275655",     # 旅行家
+    "http://neihanshequ.com/bar/46/?is_json=1&max_time=1431275383",     # 佛家禅语
+    "http://neihanshequ.com/bar/49/?is_json=1&max_time=1431275615",     # 悸动歌词
+    "http://neihanshequ.com/bar/69/?is_json=1&max_time=1431273778",     # 图写心情
+    "http://neihanshequ.com/bar/51/?is_json=1&max_time=1431275326",     # 情感点滴
+    "http://neihanshequ.com/bar/60/?is_json=1&max_time=1431279966",     # 耽美宅腐
 ]
 
 
