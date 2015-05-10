@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Profile page parser for github profile crawler"""
+"""JSON data parser for snippet crawler"""
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
@@ -11,11 +11,11 @@ from platform import node
 from time import sleep
 
 
-class ParserProfile(BaseLogger):
+class Parser(BaseLogger):
     def __init__(self, log_level=None):
         BaseLogger.__init__(self, self.__class__.__name__, log_level)
         self._db_conn = DatabaseAccessor()
-        self._log_info("profile parser start @%s", node())
+        self._log_info("parser start @%s", node())
 
 
     def process(self):
@@ -104,12 +104,12 @@ class ParserProfile(BaseLogger):
 
     def close(self):
         self._db_conn.close()
-        self._log_info("profile parser exit")
+        self._log_info("parser exit")
         self._close_logger()
 
 
 def main(times=10):
-    with closing(ParserProfile()) as parser:
+    with closing(Parser()) as parser:
         if times:
             for _ in range(times):
                 parser.process()
