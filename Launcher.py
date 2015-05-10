@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Usability verification tool for github profile crawler"""
+"""Usability verification tool for snippet crawler"""
 
 from Assigner import Assigner
 from Crawler import Crawler
@@ -31,7 +31,7 @@ class Launcher():
     def process(self, urls):
         self.clear_queue_crawl_page_snippet()
         self.add_urls_to_queue_crawl(urls)
-        # self.run_crawler(len(urls) + 3)
+        self.run_crawler(len(urls) + 3)
         # self.run_assigner(len(urls) + 3)
         # self.run_parser_profile(len(urls) + 3)
         # self.run_parser_follow(len(urls) + 3)
@@ -51,7 +51,6 @@ class Launcher():
             # print("clear snippet - {}".format(dal.snippet_clear()))
 
 
-"""
     def run_crawler(self, times=5):
         with closing(Crawler()) as crawler:
             for _ in range(times):
@@ -59,6 +58,7 @@ class Launcher():
                 sleep(config_crawl_sleep)
 
 
+"""
     def run_assigner(self, times=5):
         with closing(Assigner()) as assigner:
             for _ in range(times):
