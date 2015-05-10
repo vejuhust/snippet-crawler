@@ -53,7 +53,7 @@ class DatabaseAccessor():
         return self._db[queue_name].find(filter)
 
 
-    def _job_update(self, queue_name, status_old=None, status_new=None, url=None):
+    def _job_update(self, queue_name, status_old=None, status_new=None, url=None, data=None):
         query = {}
         if url != None:
             query['url'] = url
@@ -61,9 +61,12 @@ class DatabaseAccessor():
             query['url'] = { '$exists': True, '$ne': None }
         if status_old != None:
             query['status'] = status_old
+        set_new = { 'status': status_new }
+        if data != None:
+            set_new['data'] = data
         return self._db[queue_name].find_and_modify(
             query=query,
-            update={ '$set': { 'status': status_new } })
+            update={ '$set': set_new })
 
 
     def _job_delete(self, queue_name, filter={}):
@@ -119,8 +122,8 @@ class DatabaseAccessor():
         return self._job_update(config_queue_page, "data", "process_data")
 
 
-    def queue_page_done_raw(self, url):
-        return None != self._job_update(config_queue_page, "process_raw", "data", url)
+    def queue_page_done_raw(self, url, data):
+        return None != self._job_update(config_queue_page, "process_raw", "data", url, data)
 
 
     def queue_page_done_data(self, url):
