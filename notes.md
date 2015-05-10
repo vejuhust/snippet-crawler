@@ -53,6 +53,8 @@ mongo --port 27017 -u root -p YOUR_PASSWORD --authenticationDatabase admin
 ```
 
 ### create user
+
+create after logged in as admin
 ```javascript
 use snippetcrawl
 db.createUser(
@@ -62,6 +64,11 @@ db.createUser(
     roles: [ { role: "dbOwner", db: "snippetcrawl" } ]
   }
 )
+```
+
+login as `YOUR_USERNAME` with auth:
+```bash
+mongo --port 27017 -u YOUR_USERNAME -p YOUR_PASSWORD --authenticationDatabase snippetcrawl
 ```
 
 
