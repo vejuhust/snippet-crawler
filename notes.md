@@ -78,5 +78,11 @@ sudo apt-get install python3-pip python3-dev python3-setuptools
 sudo pip3 install pymongo
 sudo pip3 install requests
 sudo pip3 install beautifulsoup4
+sudo pip3 install flask
+```
+
+### fix `ImportError: cannot import name 'IncompleteRead'` 
+```bash
+sudo easy_install3 -U pip
 ```
 
