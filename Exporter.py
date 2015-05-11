@@ -17,22 +17,51 @@ class Exporter(BaseLogger):
         BaseLogger.__init__(self, self.__class__.__name__, log_level)
         self._db_conn = DatabaseAccessor()
         self._log_info("exporter start @%s", node())
+        self._source_set_joke = [
+            "http://neihanshequ.com/joke/",
+            "http://neihanshequ.com/bar/1/",
+            "http://neihanshequ.com/bar/11/",
+            "http://neihanshequ.com/bar/76/",
+            "http://neihanshequ.com/bar/80/",
+            "http://neihanshequ.com/bar/82/",
+            "http://neihanshequ.com/bar/59/",
+            "http://neihanshequ.com/bar/5/",
+        ]
+        self._source_set_art = [
+            "http://neihanshequ.com/bar/25/",
+            "http://neihanshequ.com/bar/26/",
+            "http://neihanshequ.com/bar/3/",
+            "http://neihanshequ.com/bar/53/",
+            "http://neihanshequ.com/bar/46/",
+            "http://neihanshequ.com/bar/49/",
+            "http://neihanshequ.com/bar/69/",
+            "http://neihanshequ.com/bar/51/",
+            "http://neihanshequ.com/bar/60/",
+        ]
 
 
     def process(self):
         filelist = []
         data = self._db_conn.snippet_read()
         self._log_info("load all snippet data from database")
+
         filelist.append(self._save_as_json(data))
         filelist.append(self._save_as_csv(data))
-        data_new = self._filter_data_column(data)
-        filelist.append(self._save_as_csv(data_new, "snippet_line.csv"))
+
+        data_joke = self._select_data_column(data, self._source_set_joke)
+        filelist.append(self._save_as_csv(data_joke, "snippet_joke.csv"))
+
+        data_art = self._select_data_column(data, self._source_set_art)
+        filelist.append(self._save_as_csv(data_art, "snippet_art.csv"))
+
         self._archive_into_zipfile(filelist)
 
 
-    def _filter_data_column(self, data_raw):
+    def _select_data_column(self, data_raw, source_set):
         data_new = []
         for item_raw in data_raw:
+            if item_raw["source"] not in source_set:
+                continue
             for index in range(max(1, len(item_raw.get("comments", [])))):
                 item_new = {
                     "count_digg": item_raw["count"]["digg"],
@@ -74,7 +103,7 @@ class Exporter(BaseLogger):
 
 
     def _archive_into_zipfile(self, filelist):
-        zipname = "profile_{}.zip".format(strftime("%Y-%m-%d_%H-%M-%S"))
+        zipname = "snippet_{}.zip".format(strftime("%Y-%m-%d_%H-%M-%S"))
         with ZipFile(zipname, 'w', ZIP_DEFLATED) as zip:
             for filename in filelist:
                 zip.write(filename)
