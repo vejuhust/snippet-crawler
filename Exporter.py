@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exporter of profiles for github profile crawler"""
+"""Exporter of snippets for snippet crawler"""
 
 from BaseLogger import BaseLogger
 from DatabaseAccessor import DatabaseAccessor
@@ -21,18 +21,14 @@ class Exporter(BaseLogger):
 
     def process(self):
         filelist = []
-        data = self._db_conn.profile_read()
-        self._log_info("load all profiles data from database")
+        data = self._db_conn.snippet_read()
+        self._log_info("load all snippet data from database")
         filelist.append(self._save_as_json(data))
         filelist.append(self._save_as_csv(data))
-        data = self._db_conn.profile_read('email')
-        self._log_info("load profiles data with email from database")
-        filelist.append(self._save_as_json(data, "profile_email.json"))
-        filelist.append(self._save_as_csv(data, "profile_email.csv"))
         self._archive_into_zipfile(filelist)
 
 
-    def _save_as_json(self, data, filename="profile.json"):
+    def _save_as_json(self, data, filename="snippet.json"):
         with open(filename, 'w') as jsonfile:
             for item in data:
                 dump(item, jsonfile, sort_keys=True)
@@ -41,7 +37,7 @@ class Exporter(BaseLogger):
         return filename
 
 
-    def _save_as_csv(self, data, filename="profile.csv"):
+    def _save_as_csv(self, data, filename="snippet.csv"):
         fields = set()
         for item in data:
             fields = fields.union(set(item.keys()))
