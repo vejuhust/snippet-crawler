@@ -37,15 +37,16 @@ class Exporter(BaseLogger):
                 item_new = {
                     "count_digg": item_raw["count"]["digg"],
                     "count_bury": item_raw["count"]["bury"],
+                    "count_favorite": item_raw["count"]["favorite"],
                     "count_comment": item_raw["count"]["comment"],
-                    "count_commdigg": None,
+                    "count_diggcomm": None,
                     "text": item_raw["content"],
-                    "comment": None,
+                    "text_comment": None,
                     "source": item_raw["source_name"],
                 }
                 if "comments" in item_raw:
-                    item_new["comment"] = item_raw["comments"][index]
-                    item_new["count_commdigg"] = item_raw["count"]["commdigg"][index]
+                    item_new["text_comment"] = item_raw["comments"][index]
+                    item_new["count_diggcomm"] = item_raw["count"]["commdigg"][index]
                 data_new.append(item_new)
         return data_new
 
@@ -64,7 +65,7 @@ class Exporter(BaseLogger):
         for item in data:
             fields = fields.union(set(item.keys()))
         with open(filename, 'w', encoding='utf8', newline='') as csvfile:
-            writer = DictWriter(csvfile, extrasaction='ignore', dialect='excel', fieldnames=sorted(fields, reverse=True))
+            writer = DictWriter(csvfile, extrasaction='ignore', dialect='excel', fieldnames=sorted(fields, reverse=False))
             writer.writeheader()
             for item in data:
                 writer.writerow(item)
