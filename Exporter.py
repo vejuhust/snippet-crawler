@@ -25,7 +25,29 @@ class Exporter(BaseLogger):
         self._log_info("load all snippet data from database")
         filelist.append(self._save_as_json(data))
         filelist.append(self._save_as_csv(data))
+        data_new = self._filter_data_column(data)
+        filelist.append(self._save_as_csv(data_new, "snippet_line.csv"))
         self._archive_into_zipfile(filelist)
+
+
+    def _filter_data_column(self, data_raw):
+        data_new = []
+        for item_raw in data_raw:
+            for index in range(max(1, len(item_raw.get("comments", [])))):
+                item_new = {
+                    "count_digg": item_raw["count"]["digg"],
+                    "count_bury": item_raw["count"]["bury"],
+                    "count_comment": item_raw["count"]["comment"],
+                    "count_commdigg": None,
+                    "text": item_raw["content"],
+                    "comment": None,
+                    "source": item_raw["source_name"],
+                }
+                if "comments" in item_raw:
+                    item_new["comment"] = item_raw["comments"][index]
+                    item_new["count_commdigg"] = item_raw["count"]["commdigg"][index]
+                data_new.append(item_new)
+        return data_new
 
 
     def _save_as_json(self, data, filename="snippet.json"):
