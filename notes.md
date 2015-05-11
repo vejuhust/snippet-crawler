@@ -125,6 +125,7 @@ db.queue_page.find({}, { "text": 0, "data": 0 }).sort( { "date": 1 } ).pretty();
 db.snippet.find().count();
 db.snippet.find().sort( { "date": -1 } ).pretty();
 db.snippet.find({}, { "archive": 0 }).sort( { "date": -1 } ).pretty();
+db.snippet.find({ "comments": { $exists: true } }, { "archive": 0 }).sort( { "date": 1 } ).pretty();
 ```
 
 
